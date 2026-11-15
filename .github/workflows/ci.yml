@@ -1,0 +1,46 @@
+name: ci
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: pip install -e . pytest
+      - run: pytest -q
+
+  examples:
+    # The README examples, run against the live PyPI and npm registries.
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install .
+      - name: Text report matches the README
+        working-directory: examples/demo
+        run: postcutoff --cutoff 2025-01 | diff -u expected-2025-01.txt -
+      - name: AGENTS.md block matches the README
+        working-directory: examples/demo
+        run: |
+          postcutoff --cutoff 2025-01 --write AGENTS.md > /dev/null
+          diff -u <(cat <(printf '# Agent notes\n\nRun tests with `pytest -q`.\n\n') expected-2025-01.md) AGENTS.md
+          git checkout AGENTS.md
+      - name: --fail-on major fails for a 2025-06 cutoff
+        working-directory: examples/demo
+        run: |
+          set +e
+          postcutoff --cutoff 2025-06 --fail-on major
+          code=$?
+          set -e
+          test "$code" = 1

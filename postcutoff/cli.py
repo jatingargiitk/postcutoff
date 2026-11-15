@@ -51,7 +51,8 @@ def render_text(report: Report, show_ok: bool) -> str:
     )
     hidden = c["ok"] if not show_ok else 0
     if hidden:
-        lines.append("(%d ok rows hidden; --all shows them)" % hidden)
+        lines.append("(%d ok %s hidden; --all shows %s)" % (
+            hidden, "row" if hidden == 1 else "rows", "it" if hidden == 1 else "them"))
     if report.skipped:
         lines.append("skipped %d: %s" % (
             len(report.skipped),

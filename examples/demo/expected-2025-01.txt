@@ -1,0 +1,12 @@
+knowledge cutoff: 2025-01-31   files: requirements.txt, package-lock.json
+LEVEL        PACKAGE                PINNED  RELEASED    NEWEST BEFORE CUTOFF
+NEW PACKAGE  openai-agents          0.1.0   2025-06-27  - (first published 2025-03-04)
+MAJOR        npm:@anthropic-ai/sdk  0.57.0  2025-07-21  0.36.3 (2025-01-27)
+MAJOR        npm:zod                4.0.5   2025-07-10  3.24.1 (2024-12-11)
+MAJOR        fastmcp                2.3.4   2025-05-15  0.4.1 (2024-12-09)
+MINOR        npm:typescript         5.8.3   2025-04-05  5.7.3 (2025-01-08)
+MINOR        pydantic               2.11.3  2025-04-08  2.10.6 (2025-01-24)
+
+7 deps: 1 new package, 3 major, 2 minor, 0 patch, 1 ok, 0 unknown
+(1 ok row hidden; --all shows it)
+skipped 1: requests (requirements.txt: not pinned with ==)
