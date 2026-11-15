@@ -1,0 +1,7 @@
+# pinned
+pydantic==2.11.3
+Requests==2.32.3  # comment
+uvicorn[standard]==0.34.0 ; python_version >= "3.9"
+fastapi>=0.100
+-r other.txt
+git+https://github.com/x/y.git

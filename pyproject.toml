@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "postcutoff"
+version = "0.1.0"
+description = "List the dependencies in your project that were released after your coding model's knowledge cutoff."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "Jatin Garg" }]
+dependencies = []
+
+[project.scripts]
+postcutoff = "postcutoff.cli:main"
+
+[tool.setuptools]
+packages = ["postcutoff"]

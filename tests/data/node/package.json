@@ -1,0 +1,1 @@
+{"name": "demo", "dependencies": {"zod": "^4.0.5", "@anthropic-ai/sdk": "^0.57.0", "local": "file:../local"}, "devDependencies": {"vitest": "^3.2.4"}}
