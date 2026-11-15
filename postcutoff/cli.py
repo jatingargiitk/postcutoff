@@ -8,6 +8,7 @@ import sys
 from typing import List, Optional
 
 from . import __version__
+from .agentsmd import render_markdown, write_block
 from .analyze import LEVELS, Report, analyze, parse_cutoff
 from .registry import Registry, RegistryError
 from .sources import discover
@@ -95,11 +96,15 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("path", nargs="?", default=".", help="project directory (default: .)")
     p.add_argument("--cutoff", required=True, metavar="DATE",
                    help="the model's knowledge cutoff: YYYY-MM (end of month) or YYYY-MM-DD")
-    p.add_argument("--format", choices=["text", "json"], default="text")
+    p.add_argument("--format", choices=["text", "json", "md"], default="text",
+                   help="md prints the block --write would insert")
     p.add_argument("--all", action="store_true", help="also list deps the model could have seen")
     p.add_argument("--fail-on", choices=LEVELS[1:], metavar="LEVEL",
                    help="exit 1 if any dep is at this level or worse "
                         "(patch < minor < major < new-package)")
+    p.add_argument("--write", metavar="FILE",
+                   help="insert or refresh a 'newer than your training data' block in FILE "
+                        "(e.g. AGENTS.md or CLAUDE.md), between postcutoff markers")
     p.add_argument("--registry-file", metavar="JSON",
                    help="read release dates from this file instead of PyPI/npm "
                         '({"pypi": {"name": {"version": "YYYY-MM-DD"}}, "npm": {...}})')
@@ -133,8 +138,14 @@ def main(argv: Optional[List[str]] = None) -> int:
     report.files = files
     if args.format == "json":
         print(render_json(report))
+    elif args.format == "md":
+        print(render_markdown(report), end="")
     else:
         print(render_text(report, args.all))
+    if args.write:
+        target = args.write if os.path.isabs(args.write) else os.path.join(args.path, args.write)
+        status = write_block(target, render_markdown(report))
+        print("%s: %s" % (target, status), file=sys.stderr)
     if args.fail_on and report.at_least(args.fail_on):
         return 1
     return 0
